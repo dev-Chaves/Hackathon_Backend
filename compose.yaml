@@ -3,18 +3,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    command: >-
+      sh -c "alembic upgrade head &&
+      uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    env_file:
+      - .env
     environment:
       APP_NAME: Continuidade Operacional API
       APP_ENV: development
-      APP_DEBUG: false
-      DATABASE_URL: postgresql://neondb_owner:npg_WYCh7jE6zGQx@ep-tiny-salad-axhpf45k-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require
-      DATABASE_SSL_MODE: require
-      DATABASE_PASSWORD: npg_WYCh7jE6zGQx
-      DATABASE_USER: neondb_owner
-      DATABASE_HOST: ep-tiny-salad-axhpf45k-pooler.c-4.us-east-2.aws.neon.tech
-      DATABASE_PORT: 5432
-      DATABASE_NAME: neondb
+      APP_DEBUG: "false"
     ports:
       - "8000:8000"
     healthcheck:
