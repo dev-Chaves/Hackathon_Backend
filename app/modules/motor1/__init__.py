@@ -1,2 +1,2 @@
-"""Motor de previsao de cobertura e risco operacional."""
+"""Motor de previsao de absenteismo."""
 
