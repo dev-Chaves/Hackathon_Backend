@@ -1,0 +1,2 @@
+"""Aplicacao de continuidade operacional."""
+
