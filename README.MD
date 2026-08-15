@@ -10,6 +10,10 @@ Estrutura inicial do backend em FastAPI, PostgreSQL, SQLAlchemy, Alembic e OR-To
 
 ## Execucao local
 
+Copie a connection string do Neon para `DATABASE_URL` no arquivo `.env`. A URL pode ser
+copiada diretamente do painel; a aplicacao normaliza URLs iniciadas por `postgresql://` para
+o driver `psycopg`. Mantenha `sslmode=require`.
+
 ```bash
 cp .env.example .env
 uv sync --extra dev
@@ -21,7 +25,8 @@ A documentacao fica disponivel em `http://localhost:8000/docs`.
 
 ## Execucao com Docker
 
-Para iniciar a API e o PostgreSQL, aplicando as migrations automaticamente:
+O Compose inicia somente a API e usa o banco remoto configurado no `.env`. As migrations sao
+aplicadas no Neon automaticamente antes da inicializacao da API:
 
 ```bash
 docker compose up --build
@@ -37,8 +42,24 @@ Para encerrar os containers:
 docker compose down
 ```
 
-Os dados do PostgreSQL permanecem no volume `postgres_data`. Para também remover os dados,
-execute explicitamente `docker compose down --volumes`.
+## Dados ficticios de demonstracao
+
+A migration `20260815_0002` cria uma massa deterministica de uma montadora ficticia chamada
+Nissa Motors, incluindo 3.000 colaboradores e dados relacionados para os tres motores. Ela e
+aplicada automaticamente no `docker compose up` ou manualmente com:
+
+```bash
+uv run alembic upgrade head
+```
+
+Para conferir o espaco ocupado no PostgreSQL:
+
+```sql
+SELECT pg_size_pretty(pg_database_size(current_database()));
+```
+
+Os nomes, matriculas e CPFs dessa massa sao artificiais e nao devem ser tratados como dados
+reais.
 
 ## Estrutura
 
