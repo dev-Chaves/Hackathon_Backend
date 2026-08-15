@@ -9,6 +9,7 @@ from app.models.entities import (
     Linha,
     Posto,
     PostoHabilidade,
+    SubstituicaoPlanejada,
 )
 
 __all__ = [
@@ -22,5 +23,5 @@ __all__ = [
     "Linha",
     "Posto",
     "PostoHabilidade",
+    "SubstituicaoPlanejada",
 ]
-

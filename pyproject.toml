@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "continuidade-operacional-api"
 version = "0.1.0"
@@ -25,6 +29,9 @@ dev = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+markers = [
+    "prod: testes de integracao somente-leitura contra o Neon configurado em DATABASE_URL",
+]
 
 [tool.ruff]
 line-length = 100
@@ -32,3 +39,10 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"migrations/versions/*.py" = ["E501"]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+exclude = ["contextDocs*", "migrations*", "tests*"]
