@@ -61,6 +61,55 @@ SELECT pg_size_pretty(pg_database_size(current_database()));
 Os nomes, matriculas e CPFs dessa massa sao artificiais e nao devem ser tratados como dados
 reais.
 
+## Motor 2 - Matchmaking
+
+O endpoint de recomendacao recebe o colaborador ausente e o limite do ranking. A data de
+referencia e calculada automaticamente pela API e devolvida na resposta:
+
+```http
+POST /api/v1/motor2/substituicoes/recomendar
+Content-Type: application/json
+
+{
+  "funcionario_ausente_id": "00000000-0000-0000-0000-000000000000",
+  "limit": 10
+}
+```
+
+Os testes unitarios nao acessam o banco:
+
+```bash
+pytest -q tests/unit
+```
+
+Os testes do Neon sao opt-in, executam somente consultas dentro de uma transacao `READ ONLY`
+e sempre finalizam com rollback:
+
+```bash
+RUN_PROD_TESTS=1 pytest -q tests/integration/test_motor2_neon_readonly.py
+```
+
+### Planejamento global de ausencias
+
+O endpoint abaixo encontra automaticamente os colaboradores indisponiveis na data atual,
+otimiza todas as substituicoes em conjunto e reserva cada substituto no maximo uma vez:
+
+```http
+POST /api/v1/motor2/substituicoes/planejar-ausencias
+```
+
+Nao e necessario enviar body. O resultado inclui o contato do tech lead de cada equipe. A
+concorrencia e protegida por lock transacional do PostgreSQL e por constraints unicas de
+ausente e substituto por data. Chamadas repetidas para o mesmo dia devolvem o planejamento ja
+reservado, sem selecionar novamente as mesmas pessoas.
+
+### Massa automotiva coerente
+
+As migrations `20260815_0006` e `20260815_0007` removem os mocks `NISSA-*` e criam uma
+fabrica com 100 linhas, tres equipes por linha (uma por turno), dez postos por linha e
+exatamente dez colaboradores por equipe. As alocacoes e habilidades seguem a linha e o posto
+de cada pessoa.
+
 ## Estrutura
 
 ```text

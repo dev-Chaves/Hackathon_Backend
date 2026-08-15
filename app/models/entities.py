@@ -15,6 +15,7 @@ from sqlalchemy import (
     String,
     Text,
     UniqueConstraint,
+    false,
     func,
 )
 from sqlalchemy.dialects.postgresql import UUID
@@ -48,8 +49,12 @@ class Equipe(TimestampMixin, Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nome: Mapped[str] = mapped_column(String(120), unique=True, index=True)
     descricao: Mapped[str | None] = mapped_column(Text)
+    linha_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("linhas.id"), index=True)
+    tech_lead_nome: Mapped[str | None] = mapped_column(String(180))
+    tech_lead_email: Mapped[str | None] = mapped_column(String(255))
 
     funcionarios: Mapped[list["Funcionario"]] = relationship(back_populates="equipe")
+    linha: Mapped["Linha | None"] = relationship(back_populates="equipes")
 
 
 class Funcionario(TimestampMixin, Base):
@@ -72,7 +77,9 @@ class Funcionario(TimestampMixin, Base):
     equipe_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("equipes.id"), index=True)
     turno: Mapped[str] = mapped_column(String(50), index=True)
     status: Mapped[StatusFuncionario] = mapped_column(
-        Enum(StatusFuncionario, name="status_funcionario"), default=StatusFuncionario.ATIVO, index=True
+        Enum(StatusFuncionario, name="status_funcionario"),
+        default=StatusFuncionario.ATIVO,
+        index=True,
     )
     distancia_trabalho_km: Mapped[Decimal] = mapped_column(Numeric(8, 2), default=0)
     tempo_deslocamento_min: Mapped[int] = mapped_column(Integer, default=0)
@@ -81,6 +88,11 @@ class Funcionario(TimestampMixin, Base):
         Enum(TipoTransporte, name="tipo_transporte")
     )
     criticidade_funcionario: Mapped[int] = mapped_column(Integer, default=1)
+    presenca_diaria: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        server_default=false(),
+    )
 
     area: Mapped[Area] = relationship(back_populates="funcionarios")
     equipe: Mapped[Equipe] = relationship(back_populates="funcionarios")
@@ -156,6 +168,7 @@ class Linha(TimestampMixin, Base):
 
     area: Mapped[Area] = relationship(back_populates="linhas")
     postos: Mapped[list["Posto"]] = relationship(back_populates="linha")
+    equipes: Mapped[list[Equipe]] = relationship(back_populates="linha")
 
 
 class Posto(Base):
@@ -213,3 +226,31 @@ class Alocacao(Base):
     funcionario: Mapped[Funcionario] = relationship(back_populates="alocacoes")
     posto: Mapped[Posto] = relationship(back_populates="alocacoes")
 
+
+class SubstituicaoPlanejada(Base):
+    __tablename__ = "substituicoes_planejadas"
+    __table_args__ = (
+        UniqueConstraint(
+            "data_referencia",
+            "funcionario_ausente_id",
+            name="uq_substituicoes_planejadas_data_ausente",
+        ),
+        UniqueConstraint(
+            "data_referencia",
+            "funcionario_substituto_id",
+            name="uq_substituicoes_planejadas_data_substituto",
+        ),
+        Index("ix_substituicoes_planejadas_data", "data_referencia"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    data_referencia: Mapped[date] = mapped_column(Date)
+    funcionario_ausente_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("funcionarios.id"), index=True
+    )
+    funcionario_substituto_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("funcionarios.id"), index=True
+    )
+    posto_destino_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("postos.id"), index=True)
+    score: Mapped[Decimal] = mapped_column(Numeric(5, 2))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
