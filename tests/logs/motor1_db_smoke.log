@@ -1,0 +1,12 @@
+Motor 1 - Database Smoke Test Log
+Generated at: 2026-08-15 02:08:30 -0300
+Workspace: /mnt/c/HackatonModel/Hackathon_Backend
+Execution target: Docker container from project Dockerfile via WSL
+
+> Motor 1 ranking from database
+total_equipes= 30
+retornadas= 3
+Nissa - Equipe 29 62.37 ALTO_RISCO 0.0
+Nissa - Equipe 23 62.36 ALTO_RISCO 0.0
+Nissa - Equipe 19 62.26 ALTO_RISCO 0.0
+Exit code: 0

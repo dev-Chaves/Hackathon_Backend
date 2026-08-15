@@ -1,0 +1,57 @@
+Motor 1 - Unit Test Execution Log
+Generated at: 2026-08-15 02:08:01 -0300
+Workspace: /mnt/c/HackatonModel/Hackathon_Backend
+Execution target: Docker container from project Dockerfile via WSL
+
+> Ruff and Motor 1 unit tests in Docker
+Collecting pytest<9.0,>=8.3
+  Downloading pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)
+Collecting pytest-asyncio<1.0,>=0.24
+  Downloading pytest_asyncio-0.26.0-py3-none-any.whl.metadata (4.0 kB)
+Collecting ruff<1.0,>=0.8
+  Downloading ruff-0.16.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (26 kB)
+Collecting iniconfig>=1 (from pytest<9.0,>=8.3)
+  Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting packaging>=20 (from pytest<9.0,>=8.3)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pluggy<2,>=1.5 (from pytest<9.0,>=8.3)
+  Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pygments>=2.7.2 (from pytest<9.0,>=8.3)
+  Downloading pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+Downloading pytest_asyncio-0.26.0-py3-none-any.whl (19 kB)
+Downloading ruff-0.16.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (11.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.1/11.1 MB 12.5 MB/s  0:00:00
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pygments-2.20.0-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 14.2 MB/s  0:00:00
+Installing collected packages: ruff, pygments, pluggy, packaging, iniconfig, pytest, pytest-asyncio
+
+Successfully installed iniconfig-2.3.0 packaging-26.3 pluggy-1.6.0 pygments-2.20.0 pytest-8.4.2 pytest-asyncio-0.26.0 ruff-0.16.3
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+All checks passed!
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.6.0 -- /usr/local/bin/python3.12
+cachedir: .pytest_cache
+rootdir: /app
+configfile: pyproject.toml
+plugins: asyncio-0.26.0, anyio-4.14.2
+asyncio: mode=Mode.AUTO, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 11 items
+
+tests/test_motor1_service.py::test_calcular_iha_pondera_janelas_historicas PASSED [  9%]
+tests/test_motor1_service.py::test_calcular_iha_limita_resultado_em_cem PASSED [ 18%]
+tests/test_motor1_service.py::test_calcular_idt_normaliza_distancia_tempo_e_transporte PASSED [ 27%]
+tests/test_motor1_service.py::test_calcular_idt_aceita_transporte_como_texto PASSED [ 36%]
+tests/test_motor1_service.py::test_calcular_ido_cresce_quando_ha_poucos_substitutos PASSED [ 45%]
+tests/test_motor1_service.py::test_calcular_ido_sem_substitutos_retorna_risco_maximo PASSED [ 54%]
+tests/test_motor1_service.py::test_calcular_icc_representa_cobertura_de_competencia PASSED [ 63%]
+tests/test_motor1_service.py::test_calcular_ive_representa_concentracao_critica PASSED [ 72%]
+tests/test_motor1_service.py::test_calcular_pns_combina_os_cinco_motores PASSED [ 81%]
+tests/test_motor1_service.py::test_classificar_pns_respeita_faixas_de_risco PASSED [ 90%]
+tests/test_motor1_service.py::test_analisar_equipe_pns_agrega_resultado_final_do_motor1 PASSED [100%]
+
+============================== 11 passed in 1.91s ==============================
+Exit code: 0
